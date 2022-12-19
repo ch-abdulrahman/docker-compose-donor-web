@@ -1,0 +1,25 @@
+version: '3.0'
+
+services:
+    web-server:
+        build: .
+        depends_on:
+            - mariadb-server
+        volumes:
+            - ./donor:/var/www/html/
+        ports:
+            -  1517:80
+
+    mariadb-server:
+        image: mariadb
+        restart: always
+        volumes:
+            - donor-data:/var/lib/mysql
+            - ./donor/sql:/docker-entrypoint-initdb.d/
+        environment:
+            MARIADB_DATABASE: donor
+            MARIADB_ROOT_PASSWORD: 123
+        ports:
+          - 3306:3306
+volumes:
+  donor-data:
